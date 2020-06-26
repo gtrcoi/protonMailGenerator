@@ -1,69 +1,46 @@
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 import time
 
-url = 'https://protonmail.com/'
+# Load chrome driver .exe
+driver = webdriver.Chrome('./chromedriver.exe')
 
-driver = webdriver.Chrome('/Users/johnfisher/Downloads/chromedriver')
+# Generate username/password
+username = 'usernameasdflkjasdf'
+password = 'Hunter2'
+
+# Open registration URL
+url = 'https://mail.protonmail.com/create/new?language=enp'
 driver.get(url)
+time.sleep(5)
 
-driver.find_element_by_xpath('//*[@title="Sign Up"]').click()
+# Interact with top level elements
+ps = driver.find_element_by_id('password')
+psc = driver.find_element_by_id('passwordc')
+ps.clear()
+psc.clear()
+ps.send_keys(password)
+psc.send_keys(password)
 
-time.sleep(2)
+# Enter iframe 1
+userFrame = driver.find_element_by_xpath('//iframe[@title="Registration form" and @class="top"]')
+driver.switch_to_frame(userFrame)
+driver.find_element_by_xpath('//*[@id="username"]').send_keys(username)
 
-driver.find_element_by_class_name('panel-heading').click()
+# Exit iframe 1
+driver.switch_to.default_content()
 
-time.sleep(4)
+# Enter iframe 2
+buttonFrame = driver.find_element_by_xpath('//iframe[@title="Registration form" and @class="bottom"]')
+driver.switch_to_frame(buttonFrame)
+driver.find_element_by_xpath('/html/body/div/div/footer/button').click()
 
-driver.find_element_by_id('freePlan').click()
+# Exit iframe 2
+driver.switch_to.default_content()
 
-time.sleep(2)
-
-driver.find_element_by_id('username').send_keys('usernameForUser')
-
-time.sleep(1.5)
-
-driver.find_element_by_id('password').send_keys('passwordForUser')
-
-time.sleep(2)
-
-driver.find_element_by_id('passwordc').send_keys('passwordForUser')
-
-time.sleep(2)
-
-driver.find_element_by_class_name('signUpProcess-btn-create').click()
-
-time.sleep(1)
-
+# Confirm
+time.sleep(5)
 driver.find_element_by_id('confirmModalBtn').click()
+time.sleep(5)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+driver.quit()
